@@ -1,4 +1,4 @@
-using Random, Statistics
+using Random, Statistics, NamedArrays
 
 # Create 80/20 split
 function split(X, y; dims=1, ratio_train = 0.8)
@@ -55,7 +55,16 @@ function prepare_data(X, y; do_normal = true, do_onehot = true, kwargs...)
     return X_train, y_train, X_test, y_test
 end
 
-function confmat(outputs, targets)
+function confmat(predictions, targets, classes)
+    length(predictions) == length(targets) || throw(DimensionMismatch("..."))
+    all(in.(predictions), classes) || all(in.(targets), classes) || error("Not all classes are included.")
 
+    nclasses = length(classes)
+    confmat = NamedArray(zeros(Int64, nclasses, nclasses), (classes, classes), ("True", "Predicted"))
+
+    for i in eachindex(predictions)
+        confmat[Name(targets[i]), Name(predictions[i])] += 1
+    end
+    return confmat
 end
 
