@@ -1,18 +1,27 @@
-mse(y, y_hat) = norm(y - y_hat)^2
-mse_grad(y, y_hat) = 2 .* (y_hat-y)
-
-cross_entropy(y, y_hat) = -sum(y .* log.(y_hat))
-cross_entropy_grad(y, y_hat) = -1 .* y ./ y_hat
+include("neural_net.jl")
 
 abstract type Step end 
 
+function train_perceptron(nlayers, input, target, loss, grad_loss, s::Step; max_it = 1000, convergence_cond = _ -> false)
+    nIn = size(input, 2)
+    nOut = size(target, 2) 
+    @show (nIn, nOut)
+    nhidden = round(Int64, 0.5*(nIn + nOut))
+    theta0 = Perceptron.init_weights(nlayers, nhidden, nIn, nOut)
+    
+    perceptron_grad(theta) = Perceptron.grads(theta, input, target, grad_loss) 
+    theta = optim(loss, perceptron_grad, s, theta0; max_it = max_it, convergence_cond = convergence_cond)
+    preds = [predict(x, input) for x in theta]
+    return preds
+end
+
 function optim(f, g, s::Step, x; max_it = 1000, convergence_cond = _ -> false)
-    xs = zeros(length(x), max_it+1)
-    xs[:,1] = x
+    xs = Vector{typeof(x)}(undef, max_it+1)
+    xs[1] = x
     x = x
     for i in 1:max_it
         x = optim_step(s, f, g, x)
-        xs[:, i+1] = x
+        xs[i+1] = x
         if (convergence_cond(x))
             break
         end
@@ -24,7 +33,7 @@ struct GD <: Step
     alpha::Float64
 end
 
-optim_step(s::GD, f, g, x) = x - s.alpha * g(x)
+optim_step(s::GD, f, g, x) = x .- s.alpha .* g(x)
 
 struct Armijo <: Step
     c::Float64
