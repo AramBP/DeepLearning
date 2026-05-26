@@ -1,3 +1,9 @@
+mse(y, y_hat) = norm(y - y_hat)^2
+mse_grad(y, y_hat) = 2 .* (y_hat-y)
+
+cross_entropy(y, y_hat) = -sum(y .* log.(y_hat))
+cross_entropy_grad(y, y_hat) = -1 .* y ./ y_hat
+
 abstract type Step end 
 
 function optim(f, g, s::Step, x; max_it = 1000, convergence_cond = _ -> false)
