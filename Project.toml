@@ -1,3 +1,8 @@
+name = "DeepLearning"
+uuid = "460e6f2d-dd19-40f8-8716-1c20ab375d85"
+version = "0.1.0"
+authors = ["Aram Brouwer <aramvanderpols05@gmail.com>"]
+
 [deps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 NamedArrays = "86f7a689-2022-50b4-a561-43c23ac3c673"
