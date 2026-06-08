@@ -6,6 +6,9 @@ mse_grad(y, y_hat) = 2 .* (y_hat .- y)
 cross_entropy(y, y_hat) = -sum(y .* log.(y_hat))
 cross_entropy_grad(y, y_hat) = -1 .* y ./ y_hat
 
+sigmoid(x::Real) = 1 / (1 + exp(-x))
+deriv_sigmoid(x::Real) = sigmoid(x) * (1 - sigmoid(x))
+
 # Create 80/20 split
 function split(X, y; dims=1, ratio_train = 0.8)
     n = length(y)
@@ -62,6 +65,9 @@ function prepare_data(X, y; do_normal = true, do_onehot = true, kwargs...)
 end
 
 function confmat(predictions, targets, classes)
+    predictions = convert(typeof(classes), predictions)
+    targets = convert(typeof(classes), targets)    
+    
     length(predictions) == length(targets) || throw(DimensionMismatch("..."))
     all(in.(predictions), classes) || all(in.(targets), classes) || error("Not all classes are included.")
 
@@ -73,4 +79,3 @@ function confmat(predictions, targets, classes)
     end
     return confmat
 end
-
