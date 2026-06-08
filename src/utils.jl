@@ -65,11 +65,7 @@ function prepare_data(X, y; do_normal = true, do_onehot = true, kwargs...)
 end
 
 function confmat(predictions, targets, classes)
-    predictions = convert(typeof(classes), predictions)
-    targets = convert(typeof(classes), targets)    
-    
     length(predictions) == length(targets) || throw(DimensionMismatch("..."))
-    all(in.(predictions), classes) || all(in.(targets), classes) || error("Not all classes are included.")
 
     nclasses = length(classes)
     confmat = NamedArray(zeros(Int64, nclasses, nclasses), (classes, classes), ("True", "Predicted"))
