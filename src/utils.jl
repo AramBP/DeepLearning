@@ -43,10 +43,10 @@ function onehot(y, classes)
         y_onehot[i, y .== class] .= 1
     end
 
-    return y_onehot
+    return transpose(y_onehot)
 end
 
-onecold(y, classes) = [classes[argmax(y_col)] for y_col in eachcol(y)]
+onecold(y, classes) = [classes[argmax(y_row)] for y_row in eachrow(y)]
 
 function prepare_data(X, y; do_normal = true, do_onehot = true, kwargs...)
     X_train, y_train, X_test, y_test = split(X, y; kwargs...)
