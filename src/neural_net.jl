@@ -64,3 +64,5 @@ function grads(m::Perceptron, input::Matrix, target::Matrix)
 
     return grads 
 end
+
+mutable struct 

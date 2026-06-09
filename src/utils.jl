@@ -11,7 +11,7 @@ deriv_sigmoid(x::Real) = sigmoid(x) * (1 - sigmoid(x))
 
 # Create 80/20 split
 function split(X, y; dims=1, ratio_train = 0.8)
-    n = length(y)
+    n = size(y, dims)
     size(X, dims) == n || throw(DimensionMismatch("..."))
     n_train = round(Int, n * ratio_train)
     indices = randperm(n)
