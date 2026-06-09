@@ -7,7 +7,7 @@ end
 function optim(gd::GradientDescent, m::NeuralNet, loss, grad; max_it = 1000)
     theta = Vector{typeof(m.params)}(undef, max_it+1)
     theta[1] = m.params
-    for i in 2:max_it
+    for i in 2:(max_it+1)
         m.params = m.params .- gd.alpha .* grad(m) 
         theta[i] = m.params
     end
